@@ -40,7 +40,6 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-import static org.apache.kafka.common.utils.Utils.mkSet;
 
 /**
  * Implementation of {@link Converter} and {@link HeaderConverter} that uses JSON to store schemas and objects. By
@@ -226,16 +225,14 @@ public class JsonConverter implements Converter, HeaderConverter {
 
     public JsonConverter() {
         serializer = new JsonSerializer(
-            mkSet(),
+            Collections.emptySet(),
             JSON_NODE_FACTORY
         );
 
         deserializer = new JsonDeserializer(
-            mkSet(
-                // this ensures that the JsonDeserializer maintains full precision on
-                // floating point numbers that cannot fit into float64
-                DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS
-            ),
+            // this ensures that the JsonDeserializer maintains full precision on
+            // floating point numbers that cannot fit into float64
+            Collections.singleton(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS),
             JSON_NODE_FACTORY
         );
     }
